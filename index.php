@@ -1,5 +1,5 @@
 <?php
-include ("Template/header.php");
+include ("template/header.php");
 ?>
 <div class="contenedor-index">
     <div class="div-index1">

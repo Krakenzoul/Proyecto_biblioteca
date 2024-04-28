@@ -1,5 +1,5 @@
 <?php 
-$url_base="http://localhost:3000/";
+$url_base="http://localhost:3000";
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -16,7 +16,7 @@ $url_base="http://localhost:3000/";
 <body>
   <div>
     <ul>
-      <li><a href="<?php echo $url_base;?>index.php">Inicio</a></li>
+      <li><a href="<?php echo $url_base;?>/index.php">Inicio</a></li>
       <li><a href="<?php echo $url_base;?>/Back/Libros/">Libros</a></li>
       <li><a href="/Back/Buscar Libro/">Busqueda de Libros</a></li>
       <li><a href="#contact">Prestamos</a></li>
