@@ -2,7 +2,7 @@
 Buscar libro
 
 <?php 
-    echo "<div style=borde:1px;>";
+    echo "<div style=border:1px;>";
 
     echo "</div>";
 ?>
