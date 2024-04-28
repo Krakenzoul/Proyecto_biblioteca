@@ -1,5 +1,5 @@
 <?php
-include ("template/header.php");
+include ("../../Template/header.php");
 ?>
 <div class="contenedor-index">
     <div class="div-index1">
@@ -11,5 +11,5 @@ include ("template/header.php");
 
 </div>
 <?php
-include ("template/footer.php");
+include ("../../Template/footer.php");
 ?>
