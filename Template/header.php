@@ -1,3 +1,6 @@
+<?php 
+$url_base="http://localhost:3000/";
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -13,12 +16,11 @@
 <body>
   <div>
     <ul>
-      <li><a href="../index.php">Inicio</a></li>
-      <li><a href="#news">Libros</a></li>
+      <li><a href="<?php echo $url_base;?>index.php">Inicio</a></li>
+      <li><a href="<?php echo $url_base;?>/Back/Libros/">Libros</a></li>
+      <li><a href="/Back/Buscar Libro/">Busqueda de Libros</a></li>
       <li><a href="#contact">Prestamos</a></li>
-      <li><a href="#about">Busqueda de Libros</a></li>
-      <li><a href="#about">Libros En Prestamo</a></li>
-      <li><a href="#about">Entrega Libros</a></li>
+      <li><a href="<?php echo $url_base;?>/Back/tipo/">Tipo</a></li>
     </ul>
     
   </div>
