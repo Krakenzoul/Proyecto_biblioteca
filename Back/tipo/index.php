@@ -1,8 +1,8 @@
 <?php
-include ("/Template/header.php");
+include ("Template/header.php");
 ?>
 <?php echo "pinga"; ?> 
 
 <?php
-include ("/Template/footer.php");
+include ("Template/footer.php");
 ?>
