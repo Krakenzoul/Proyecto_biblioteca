@@ -46,3 +46,16 @@ li a:hover {
     padding: 20px;
     box-sizing: border-box;
 }
+
+
+.div-index1-prestamo{
+    flex: 1;
+    margin: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+.div-index2-prestamo{
+    margin: 0px;
+    padding: 40px;
+    box-sizing: border-box;
+}
