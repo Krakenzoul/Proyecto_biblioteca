@@ -166,7 +166,7 @@
            
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if (isset($_POST['generar_prestamo'])) {
-                 echo $fecha;
+                 
                     $prestamo->setCedula($_POST['no_documento']);
                     $no_documento=$prestamo->getCedula();    
                     $sentenciassql = ("call traer_datos_cliente($no_documento)");
@@ -198,12 +198,8 @@
                             $sentenciassql=("call agregar_prestamo($id_libro,$no_documento,$fecha,$fecha_devolucion)");
                             $resultado=$conexion->prepare($sentenciassql);
                             $resultado->execute();
-                        
-                           
                         }else{//al parecer si hay un cliente, entonces solo se ejecuta agregar
-                            echo "Esto es id=".$_SESSION['libro'];
                             echo "<script>console.log('no hay nadie registrado así que añade el cliente y el prestamo ');</script>";
-                           echo $fecha;
                             $sentenciassql=("call agregar_prestamo($id_libro,$no_documento,$fecha,$fecha_devolucion)");
                             $resultados=$conexion->prepare($sentenciassql);
                             $resultados->execute();
