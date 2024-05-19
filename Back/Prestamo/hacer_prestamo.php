@@ -35,7 +35,7 @@
                   <form method='post'>
                      <div class="mb-3">
                         <label for="" class="form-label">Id del libro</label>
-                        <input type="text" class="form-control" name="id_libro" id="id_libro"
+                        <input type="text"  class="form-control" name="id_libro" id="id_libro"
                            aria-describedby="helpId" placeholder="Numero de identificación del Libro"
                            required />
                         <br> <button class="btn btn-success" name="boton_buscar_libro">Buscar Informacion
@@ -150,7 +150,7 @@
                      </div>
                 </div>
                 <div class="form-group">
-                 <button class="btn btn-success" name="generar_prestamo">Generar Prestamo</button>
+                 <button class="btn btn-success" name="generar_prestamo" <?php $id_libro=$_SESSION['libro']; estado_input($id_libro);?>>Generar Prestamo</button>
                 <a class="btn btn-info" href="Index.php">Volver</a>
                  </div>
                  </form>

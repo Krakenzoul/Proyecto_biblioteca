@@ -38,6 +38,8 @@ $listaLibros = $consultasql->fetchAll();
                                         <td><?php echo $libro["No_estanteria"]; ?></td>
                                         <td><?php if ($libro["estado"] == 1) {
                                             echo "Disponible";
+                                        }else{
+                                            echo "En prestamo";
                                         }
                                         ; ?></td>
                                         <td>
