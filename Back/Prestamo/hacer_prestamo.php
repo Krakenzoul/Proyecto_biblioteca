@@ -3,9 +3,7 @@
    
    include ("prestamo.php");
    date_default_timezone_set('America/Mexico_City');
-
-   $estado_required = "required";
-   $estado_not_required = "";
+   
    $objdb = new ConexionBDPDO();
    $conexion = $objdb->conectar();
    $prestamo = new Prestamo();
@@ -13,11 +11,13 @@
    $informacion_persona=0;
    $id_libro = 0;
    $nombre_columna = "";
+   $verificar=0;
    $prestamo->setFecha(date('Y-m-d',time()));
    // Calcular la fecha 15 días después
    $prestamo->setFecha_devolucion(date("Y-m-d", strtotime($prestamo->getFecha() . ' + 15 days')));
    $fecha=$prestamo->getFecha();
    $fecha_devolucion=$prestamo->getFecha_devolucion();
+   $_SESSION['libro'] = 0;
    ?>
 <div>
 <div class="container text-center">
@@ -43,8 +43,9 @@
                      </div>
                   </form>
                   <?php
-                  session_start();
+                
                      if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                        session_start();
                          //Esto hará la busqueda de los datos del libro solo con el id, verificara si existe o no el libro
                          if (isset($_POST['boton_buscar_libro'])) {
                              $prestamo->setId_libro($_POST['id_libro']);
@@ -54,6 +55,7 @@
                              $resultado = $conexion->prepare($sentenciasql);
                              $resultado->execute();
                              $informacion_libro = $resultado->fetch();
+                             $verificar=1;
                              if (!$informacion_libro) {
                                  echo "<div class='alert alert-danger' role='alert'>";
                                  echo "el numero de Id no se encuentra registrado, ingrese un número valido";
@@ -150,13 +152,18 @@
                      </div>
                 </div>
                 <div class="form-group">
-                 <button class="btn btn-success" name="generar_prestamo" <?php $id_libro=$_SESSION['libro']; estado_input($id_libro);?>>Generar Prestamo</button>
-                <a class="btn btn-info" href="Index.php">Volver</a>
+                  
+                 <button class="btn btn-success" name="generar_prestamo" <?php
+                if($verificar === 0)
+                  {echo"disabled";}
+                  else{echo "enable";} ?> >Generar Prestamo</button>
+                <a class="btn btn-info" href="Index.php" >Volver</a>
                  </div>
                  </form>
              </div>
                         
             <?php 
+           
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if (isset($_POST['generar_prestamo'])) {
                  echo $fecha;
@@ -191,6 +198,7 @@
                             $sentenciassql=("call agregar_prestamo($id_libro,$no_documento,$fecha,$fecha_devolucion)");
                             $resultado=$conexion->prepare($sentenciassql);
                             $resultado->execute();
+                        
                            
                         }else{//al parecer si hay un cliente, entonces solo se ejecuta agregar
                             echo "Esto es id=".$_SESSION['libro'];
@@ -199,6 +207,7 @@
                             $sentenciassql=("call agregar_prestamo($id_libro,$no_documento,$fecha,$fecha_devolucion)");
                             $resultados=$conexion->prepare($sentenciassql);
                             $resultados->execute();
+                            
                         }
                     }
                 }
