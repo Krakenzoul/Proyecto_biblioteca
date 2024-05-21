@@ -15,6 +15,10 @@ $listaPrestamo = $consultasql->fetchAll();
                     <a name="id_libro" class="btn btn-dark" href="hacer_prestamo.php" role="button">Generar
                         Prestamo</a>
                 </div>
+                <div class="card-header">
+                    <a name="id_libro" class="btn btn-dark" href="hacer_prestamo.php" role="button">Generar
+                        Prestamo</a>
+                </div>
                 <div class="card-body">
                     <div class="table-responsive-lg">
                         <table class="table table-light">
@@ -58,11 +62,11 @@ $listaPrestamo = $consultasql->fetchAll();
                                         }
                                         ; ?></td>
                                         <td>
-                                            <a href="editar.php?id_libro=<?php echo $libro["id_libro"] ?>"
+                                            <a href="editar.php?id_libro=<?php echo $prestamo["No_prestamo"] ?>"
                                                 class="btn btn-warning">Editar</a>
                                         </td>
                                         <td>
-                                            <a href="eliminar.php?id_libro=<?php echo $libro["id_libro"] ?>"
+                                            <a href="eliminar.php?No_prestamo=<?php echo $prestamo["No_prestamo"] ?>"
                                                 class="btn btn-danger">Eliminar</a>
                                         </td>
                                     </tr>

@@ -14,4 +14,3 @@ if($resultado){
  $registro = $eliminar->execute([$id_libro]);
 }
 header("Location: Index.php");
-?>

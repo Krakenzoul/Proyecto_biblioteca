@@ -38,17 +38,23 @@ $listaLibros = $consultasql->fetchAll();
                                         <td><?php echo $libro["No_estanteria"]; ?></td>
                                         <td><?php if ($libro["estado"] == 1) {
                                             echo "Disponible";
-                                        }else{
+                                        } else {
                                             echo "En prestamo";
                                         }
                                         ; ?></td>
                                         <td>
-                                            <a href="editar.php?id_libro=<?php echo $libro["id_libro"] ?>"
-                                                class="btn btn-warning">Editar</a>
+                                            <a href="editar.php?id_libro=<?php if ($libro["estado"] == 1) {
+                                                echo $libro["id_libro"];
+                                            } else {
+                                        
+                                            } ?>" class="btn btn-warning">Editar</a>
                                         </td>
                                         <td>
-                                            <a href="eliminar.php?id_libro=<?php echo $libro["id_libro"] ?>"
-                                                class="btn btn-danger">Eliminar</a>
+                                            <a href="eliminar.php?id_libro=<?php if ($libro["estado"] == 1) {
+                                                echo $libro["id_libro"];
+                                            } else {
+                                              
+                                            } ?>" class="btn btn-danger">Eliminar</a>
                                         </td>
                                     </tr>
                                 <?php } ?>

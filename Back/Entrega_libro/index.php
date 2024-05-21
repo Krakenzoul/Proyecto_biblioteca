@@ -1,4 +1,4 @@
 <?php include("../../Template/header.php"); 
 ?>
-Buscar libro
+devolver    
 <?php include("../../Template/footer.php"); ?>
