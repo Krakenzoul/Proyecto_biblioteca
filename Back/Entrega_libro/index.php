@@ -20,14 +20,13 @@ $listaPrestamo = $consultasql->fetchAll();
                     <a name="id_libro" class="btn btn-dark" href="hacer_prestamo.php" role="button">Generar
                         Prestamo</a>
                 </div>
-             
+
                 <div class="card-body">
                     <div class="table-responsive-lg">
                         <table class="table table-light">
                             <thead>
                                 <tr>
-                                    <th scope="col">Id</th>
-                                    <th scope="col">id_libro</th>
+                                    <th scope="col">Numero Prestamo</th>
                                     <th scope="col">Nombre libro</th>
                                     <th scope="col">Numero documento</th>
                                     <th scope="col">Nombre Cliente</th>
@@ -44,8 +43,8 @@ $listaPrestamo = $consultasql->fetchAll();
                                     $sql = "call traer_datos_prestamo($prestamo[No_prestamo])";
                                     $resultado = $conexion->prepare($sql);
                                     $resultado->execute();
-                                    $datos_prestamo=$resultado->fetch();
-                                    
+                                    $datos_prestamo = $resultado->fetch();
+
                                     $sql = "call nombre_libro($datos_prestamo[id_libro])";
                                     $resultado = $conexion->prepare($sql);
                                     $resultado->execute();
@@ -57,7 +56,6 @@ $listaPrestamo = $consultasql->fetchAll();
                                     ?>
                                     <tr class="">
                                         <td><?php echo $datos_prestamo["No_prestamo"]; ?></td>
-                                        <td><?php echo $datos_prestamo["id_libro"]; ?></td>
                                         <td><?php echo $nombre_libro["nombre_libro"] ?></td>
                                         <td><?php echo $datos_prestamo["No_documento"]; ?></td>
                                         <td><?php echo $nombre_cliente["primer_nombre"] . " " . $nombre_cliente["primer_apellido"] ?>

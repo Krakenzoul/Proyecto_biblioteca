@@ -62,8 +62,8 @@ $listaPrestamo = $consultasql->fetchAll();
                                         }
                                         ; ?></td>
                                         <td>
-                                            <a href="editar.php?id_libro=<?php echo $prestamo["No_prestamo"] ?>"
-                                                class="btn btn-warning">Editar</a>
+                                            <a href="hacer_devolucion.php?id_libro=<?php echo $prestamo["No_prestamo"] ?>"
+                                                class="btn btn-warning">Hacer Devolucion</a>
                                         </td>
                                         <td>
                                             <a href="eliminar.php?No_prestamo=<?php echo $prestamo["No_prestamo"] ?>"
