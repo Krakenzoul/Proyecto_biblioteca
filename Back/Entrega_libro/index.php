@@ -69,7 +69,7 @@ $listaPrestamo = $consultasql->fetchAll();
                                         }
                                         ; ?></td>
                                         <td>
-                                            <a href="editar.php?id_libro=<?php echo $prestamo["No_prestamo"] ?>"
+                                            <a href="devolucion.php?No_prestamo=<?php echo $prestamo["No_prestamo"] ?>"
                                                 class="btn btn-warning">Editar</a>
                                         </td>
                                         <td>

@@ -46,6 +46,7 @@ $listaPrestamo = $consultasql->fetchAll();
                                     $resultado = $conexion->prepare($sql);
                                     $resultado->execute();
                                     $nombre_cliente = $resultado->fetch();
+                                    if($prestamo["estado"] == 1){
                                     ?>
                                     <tr class="">
                                         <td><?php echo $prestamo["No_prestamo"]; ?></td>
@@ -58,11 +59,12 @@ $listaPrestamo = $consultasql->fetchAll();
                                         <td><?php echo $prestamo["fecha_prestamo"]; ?></td>
                                         <td><?php echo $prestamo["fecha_devolucion"]; ?></td>
                                         <td><?php if ($prestamo["estado"] == 1) {
-                                            echo "No devuelto";
+                                            echo "En prestamo";
                                         }
+                                    
                                         ; ?></td>
                                         <td>
-                                            <a href="hacer_devolucion.php?id_libro=<?php echo $prestamo["No_prestamo"] ?>"
+                                            <a href="hacer_devolucion.php?No_prestamo=<?php echo $prestamo["No_prestamo"] ?>"
                                                 class="btn btn-warning">Hacer Devolucion</a>
                                         </td>
                                         <td>
@@ -70,12 +72,12 @@ $listaPrestamo = $consultasql->fetchAll();
                                                 class="btn btn-danger">Eliminar</a>
                                         </td>
                                     </tr>
-                                <?php } ?>
+                                <?php } }?>
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </div>
+            </div>  
         </div>
     </div>
     <div class="div-index2-prestamo">
