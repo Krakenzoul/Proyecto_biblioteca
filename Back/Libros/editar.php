@@ -1,5 +1,6 @@
 <?php
 include ("../../Template/header.php");
+include ("../../Conection/ConectBD.php");
 $objdb = new ConexionBDPDO();
 $conexion = $objdb->conectar();
 $id_libro = $_GET["id_libro"];

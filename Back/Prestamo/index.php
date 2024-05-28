@@ -1,4 +1,5 @@
 <?php include ("../../Template/header.php");
+include ("../../Conection/ConectBD.php");
 $db = new ConexionBDPDO();
 $conexion = $db->conectar();
 $consultasql = $conexion->prepare("select * from prestamo");
@@ -15,10 +16,7 @@ $listaPrestamo = $consultasql->fetchAll();
                     <a name="id_libro" class="btn btn-dark" href="hacer_prestamo.php" role="button">Generar
                         Prestamo</a>
                 </div>
-                <div class="card-header">
-                    <a name="id_libro" class="btn btn-dark" href="hacer_prestamo.php" role="button">Generar
-                        Prestamo</a>
-                </div>
+
                 <div class="card-body">
                     <div class="table-responsive-lg">
                         <table class="table table-light">
@@ -46,38 +44,40 @@ $listaPrestamo = $consultasql->fetchAll();
                                     $resultado = $conexion->prepare($sql);
                                     $resultado->execute();
                                     $nombre_cliente = $resultado->fetch();
-                                    if($prestamo["estado"] == 1){
-                                    ?>
-                                    <tr class="">
-                                        <td><?php echo $prestamo["No_prestamo"]; ?></td>
-                                        <td><?php echo $prestamo["id_libro"]; ?></td>
-                                        <td><?php echo $nombre_libro["nombre_libro"] ?></td>
-                                        <td><?php echo $prestamo["No_documento"]; ?></td>
-                                        <td><?php echo $nombre_cliente["primer_nombre"] . " " . $nombre_cliente["primer_apellido"] ?>
-                                        </td>
-                                        <td><?php echo $nombre_cliente["telefono"]; ?></td>
-                                        <td><?php echo $prestamo["fecha_prestamo"]; ?></td>
-                                        <td><?php echo $prestamo["fecha_devolucion"]; ?></td>
-                                        <td><?php if ($prestamo["estado"] == 1) {
-                                            echo "En prestamo";
-                                        }
-                                    
-                                        ; ?></td>
-                                        <td>
-                                            <a href="hacer_devolucion.php?No_prestamo=<?php echo $prestamo["No_prestamo"] ?>"
-                                                class="btn btn-warning">Hacer Devolucion</a>
-                                        </td>
-                                        <td>
-                                            <a href="eliminar.php?No_prestamo=<?php echo $prestamo["No_prestamo"] ?>"
-                                                class="btn btn-danger">Eliminar</a>
-                                        </td>
-                                    </tr>
-                                <?php } }?>
+                                    if ($prestamo["estado"] == 1) {
+                                        ?>
+                                        <tr class="">
+                                            <td><?php echo $prestamo["No_prestamo"]; ?></td>
+                                            <td><?php echo $prestamo["id_libro"]; ?></td>
+                                            <td><?php echo $nombre_libro["nombre_libro"] ?></td>
+                                            <td><?php echo $prestamo["No_documento"]; ?></td>
+                                            <td><?php echo $nombre_cliente["primer_nombre"] . " " . $nombre_cliente["primer_apellido"] ?>
+                                            </td>
+                                            <td><?php echo $nombre_cliente["telefono"]; ?></td>
+                                            <td><?php echo $prestamo["fecha_prestamo"]; ?></td>
+                                            <td><?php echo $prestamo["fecha_devolucion"]; ?></td>
+                                            <td><?php if ($prestamo["estado"] == 1) {
+                                                echo "En prestamo";
+                                            }
+
+                                            ; ?></td>
+                                            <td>
+                                                <a href="hacer_devolucion.php?No_prestamo=<?php echo $prestamo["No_prestamo"] ?>"
+                                                    class="btn btn-warning">Hacer Devolucion</a>
+                                            </td>
+                                            <!-- <td>
+                                                <a href="eliminar.php?No_prestamo=<?php echo $prestamo["No_prestamo"] ?>"
+                                                    class="btn btn-danger">Eliminar</a>
+                                            </td> -->
+
+                                        </tr>
+                                    <?php }
+                                } ?>
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </div>  
+            </div>
         </div>
     </div>
     <div class="div-index2-prestamo">

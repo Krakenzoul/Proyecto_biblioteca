@@ -1,5 +1,5 @@
 <?php
-include("cliente.php");
+include ("../Cliente/cliente.php");
 class Prestamo extends Cliente
 {
     private $id_libro;
@@ -23,12 +23,12 @@ class Prestamo extends Cliente
     }
     public function setFecha_devolucion($fecha_devolucion)
     {
-        $this->fecha_devolucion= $fecha_devolucion;
+        $this->fecha_devolucion = $fecha_devolucion;
     }
     public function getFecha_devolucion()
     {
         return $this->fecha_devolucion;
     }
-   
+
 }
 

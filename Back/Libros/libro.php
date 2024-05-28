@@ -4,6 +4,7 @@ class Libro {
     private $no_estanteria;
     private $categoria;
     private $nombre_autor;
+    private $estado;
 
     public function getnombre_Titulo() {
         return $this->nombre_titulo;
@@ -32,5 +33,12 @@ class Libro {
     public function getNo_estanteria(){
         return $this->no_estanteria;
     }
+    public function setEstado($estado){
+        $this->estado=$estado;
+    }
+    public function getEstado(){
+        return $this->estado;
+    }
+
 
 }

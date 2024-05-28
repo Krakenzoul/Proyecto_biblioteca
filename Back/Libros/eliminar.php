@@ -1,4 +1,5 @@
 <?php
+
 if (!isset($_GET["id_libro"])) {
     exit("No existe el id_libro.....");
 } else {

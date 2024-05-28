@@ -1,5 +1,5 @@
 <?php include ("../../Template/header.php");
-
+include("../../Conection/ConectBD.php");
 $db = new ConexionBDPDO();
 $conexion = $db->conectar();
 $consultasql = $conexion->prepare("select * from devoluciones");
@@ -40,19 +40,24 @@ $listaPrestamo = $consultasql->fetchAll();
                             </thead>
                             <tbody>
                                 <?php foreach ($listaPrestamo as $prestamo) {
+                                   
                                     $sql = "call traer_datos_prestamo($prestamo[No_prestamo])";
                                     $resultado = $conexion->prepare($sql);
                                     $resultado->execute();
                                     $datos_prestamo = $resultado->fetch();
-
+                                    
                                     $sql = "call nombre_libro($datos_prestamo[id_libro])";
                                     $resultado = $conexion->prepare($sql);
                                     $resultado->execute();
                                     $nombre_libro = $resultado->fetch();
+
+                                    if(is_array($nombre_libro) && isset($nombre_libro["nombre_libro"]) && $nombre_libro["nombre_libro"] !== false && !is_null($nombre_libro["nombre_libro"])){
+
                                     $sql = "call traer_datos_cliente($datos_prestamo[No_documento])";
                                     $resultado = $conexion->prepare($sql);
                                     $resultado->execute();
                                     $nombre_cliente = $resultado->fetch();
+                                    
                                     ?>
                                     <tr class="">
                                         <td><?php echo $datos_prestamo["No_prestamo"]; ?></td>
@@ -68,6 +73,8 @@ $listaPrestamo = $consultasql->fetchAll();
                                             echo "No devuelto";
                                         }
                                         ; ?></td>
+                                        
+                                        <!--
                                         <td>
                                             <a href="devolucion.php?No_prestamo=<?php echo $prestamo["No_prestamo"] ?>"
                                                 class="btn btn-warning">Editar</a>
@@ -75,9 +82,13 @@ $listaPrestamo = $consultasql->fetchAll();
                                         <td>
                                             <a href="eliminar.php?No_prestamo=<?php echo $prestamo["No_prestamo"] ?>"
                                                 class="btn btn-danger">Eliminar</a>
+                                        -->
+                                           
                                         </td>
                                     </tr>
-                                <?php } ?>
+                                <?php 
+                            }}
+                             ?>
                             </tbody>
                         </table>
                     </div>

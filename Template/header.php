@@ -1,6 +1,6 @@
 <?php
 $url_base = "http://localhost:3000";
-include_once ("../../Conection/ConectBD.php");
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -19,9 +19,9 @@ include_once ("../../Conection/ConectBD.php");
     <ul>
       <li><a href="<?php echo $url_base; ?>/index.php">Inicio</a></li>
       <li><a href="<?php echo $url_base; ?>/Back/Libros/">Libros</a></li>
-      <li><a href="<?php echo $url_base; ?>/Back/Buscar Libro/">Busqueda de Libros</a></li>
       <li><a href="<?php echo $url_base; ?>/Back/Prestamo/">Prestamos</a></li>
       <li><a href="<?php echo $url_base; ?>/Back/Entrega_libro/">Devolución</a></li>
+      <li><a href="<?php echo $url_base; ?>/Back/Cliente/">Clientes</a></li>
     </ul>
 
   </div>
