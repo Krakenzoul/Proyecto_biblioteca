@@ -18,6 +18,12 @@ $no_documento = 0;
             <div class="card">
                 <div class="card-header">
                     <a name="id_libro" class="btn btn-dark" href="aniadir_cliente.php" role="button">Añadir Cliente</a>
+                    <?php if (isset($_GET['error']) && $_GET['error'] == 1) {
+                        echo "<div class='alert alert-danger' role='alert'>";
+                        echo "No se puede eliminar el cliente ya que tiene prestamos a su nombre";
+                        echo "</div>";
+                    }
+                    ?>
                 </div>
 
                 <div class="card-body">
@@ -49,23 +55,30 @@ $no_documento = 0;
                                     <td><?php echo $cliente["segundo_apellido"] ?></td>
                                     <td><?php echo $cliente["telefono"]; ?></td>
                                     <td><?php echo $cantidad_prestamos["total"]; ?></td>
-                                        <td>
-                                        <a href="editar.php?No_documento=<?php echo $no_documento ?>" class="btn btn-warning">Editar</a>
-                                        </td>
-                                        <td>
+                                    <td>
+                                        <a href="editar.php?No_documento=<?php echo $no_documento ?>"
+                                            class="btn btn-warning">Editar</a>
+                                    </td>
+                                    <td>
                                         <a href="eliminar.php?No_documento=<?php echo $cliente["No_documento"] ?>"
                                             class="btn btn-danger">Eliminar</a>
                                     </td>
 
                                     </tr>
                                 <?php }
+
                             ?>
                             </tbody>
                         </table>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
     <div class="div-index2-prestamo">
         <img src="../../imagen/buho_logo.jpeg" height="300px" alt="buho_logo">

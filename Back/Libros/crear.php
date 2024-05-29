@@ -3,10 +3,15 @@ include ("../../Template/header.php");
 include_once "../../Conection/ConectBD.php";
 $bd = new ConexionBDPDO();
 $conect = $bd->conectar();
-$datos_estanteria = "SELECT * FROM estanteria";
-$resultado_e = $conect->prepare($datos_estanteria);
+$sql = "SELECT * FROM estanteria";
+$resultado_e = $conect->prepare($sql);
 $resultado_e->execute();
-$estanterias = $resultado_e->fetchAll()
+$estanterias = $resultado_e->fetchAll();
+
+$sql = "SELECT * FROM empleado";
+$resultado_em = $conect->prepare($sql);
+$resultado_em->execute();
+$empleados = $resultado_em->fetchAll()
     ?>
 
 
@@ -30,8 +35,8 @@ $estanterias = $resultado_e->fetchAll()
                             </div>
 
                             <div class="mb-3">
-                                <label for="" class="form-label">Número estanteria</label>
-                                <select id="inputState" name="no_estanteria" class="form-select">
+                                <label for="" class="form-label" required >Número estanteria</label>
+                                <select id="inputState" name="no_estanteria" class="form-select" required>
                                     <option selected value="">Selecciona una estanteria</option>
                                     <?php foreach ($estanterias as $categoria): ?>
                                         <option value="<?php echo $categoria['No_estanteria']; ?>">
@@ -43,7 +48,19 @@ $estanterias = $resultado_e->fetchAll()
                             <div class="mb-3">
                                 <label for="" class="form-label">Categoria</label>
                                 <input type="text" class="form-control" name="categoria" id="categoria"
-                                    aria-describedby="helpId" placeholder="Número estanteria" required />
+                                    aria-describedby="helpId" placeholder="Categoria del libro" required />
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="" class="form-label" >Empleado Encargado</label>
+                                <select id="inputState" name="no_empleado" class="form-select" required>
+                                    <option selected value="" >Selecciona una estanteria</option>
+                                    <?php foreach ($empleados as $empleado): ?>
+                                        <option value="<?php echo $empleado['No_documento']; ?>">
+                                            <?php echo "(" . $empleado['primer_nombre'] . " " . $empleado['primer_apellido']; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
 
                             <div class="form-group"><button class="btn btn-success">Guardar Registro</button>
@@ -64,20 +81,57 @@ $estanterias = $resultado_e->fetchAll()
 include ("libro.php");
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nuevolibro = new Libro();
+    include ("../verificacion.php");
     $nuevolibro->setnombre_Titulo($_POST['nombre_libro']);
     $nuevolibro->setCategoria($_POST['categoria']);
     $nuevolibro->setnombre_Autor($_POST['nombre_autor']);
     $nuevolibro->setNo_estanteria($_POST['no_estanteria']);
-
     $no_estanteria = $nuevolibro->getNo_estanteria();
     $categoria = $nuevolibro->getCategoria();
     $nombre_titulo = $nuevolibro->getnombre_Titulo();
     $nombre_autor = $nuevolibro->getnombre_Autor();
+    try {
+        $campos = array($nombre_autor, $categoria);
+        $errores = array();
+        foreach ($campos as $campo) {
+            if (verifica_valores_especiales($campo) || verifica_valores_numeros($campo)) {
+                $errores[] = "El campo contiene caracteres no válidos: " . $campo;
+            }
 
-    $call_procedure = "call agregar_libro('$no_estanteria','$nombre_autor','$nombre_titulo','$categoria')";
-    $sentenciasql = $conect->prepare($call_procedure);
-    $sentenciasql->execute();
-    header("Location: Index.php");
+        }
+
+        if (!empty($errores)) {
+            echo "<div class='alert alert-warning' role='alert'>";
+            echo "Se encontraron errores en los siguientes campos:<br>";
+            foreach ($errores as $error) {
+                echo "- " . $error . "<br>";
+            }
+            echo "</div>";
+        } else {
+          
+            $call_procedure = "call agregar_libro('$no_estanteria','$nombre_autor','$nombre_titulo','$categoria')";
+            $sentenciasql = $conect->prepare($call_procedure);
+            $sentenciasql->execute();
+            $result = $sentenciasql->fetch(PDO::FETCH_ASSOC);
+            $id_libro = $result['id_libro'];
+            $sentenciasql->closeCursor();
+
+            $no_empleado = $_POST['no_empleado'];
+            $tipo = "creacion";
+            $descripcion = "registro de un nuevo libro";
+            
+            $call_procedure = "call agregar_movimiento($id_libro,'$no_empleado','$tipo','$descripcion')";
+            $sentenciasql = $conect->prepare($call_procedure);
+            $sentenciasql->execute();
+
+        }
+    } catch (PDOException $e) {
+
+        echo "<div class='alert alert-warning' role='alert'>";
+        echo "Hubo un error, por favor, vuelva a ingresar los datos: ".$e->getMessage();
+        echo "</div>";
+    }
+
 }
 
 ?>

@@ -9,6 +9,19 @@ if ($id_libro > 0) {
     $resultado = $conexion->prepare($sentenciasql);
     $resultado->execute();
     $informacion_libro = $resultado->fetch();
+    $resultado->closeCursor();
+
+    $sql = "SELECT * FROM estanteria";
+    $resultado_e = $conexion->prepare($sql);
+    $resultado_e->execute();
+    $estanterias = $resultado_e->fetchAll();
+    $resultado_e->closeCursor();
+
+    $sql = "SELECT * FROM empleado";
+    $resultado_em = $conexion->prepare($sql);
+    $resultado_em->execute();
+    $empleados = $resultado_em->fetchAll();
+    $resultado_em->closeCursor();
     if (!$informacion_libro) {
         exit("el libro no existe.........");
     }
@@ -43,10 +56,34 @@ if ($id_libro > 0) {
                                         placeholder="Categoria" required />
                                 </div>
                                 <div class="mb-3">
-                                    <label for="" class="form-label">Número estanteria</label>
-                                    <input type="number" class="form-control"
-                                        value="<?php echo $informacion_libro["No_estanteria"] ?>" name="no_estanteria"
-                                        id="no_estanteria" aria-describedby="helpId" placeholder="Número estanteria"
+
+                                    <label for="" class="form-label" required>Número estanteria: Número de la Estanteria
+                                        actual: <?php echo $informacion_libro["No_estanteria"] ?></label>
+                                    <select id="inputState" name="no_estanteria" class="form-select" required>
+                                        <option selected value="">Selecciona una estanteria</option>
+                                        <?php foreach ($estanterias as $categoria): ?>
+                                            <option value="<?php echo $categoria['No_estanteria']; ?>">
+                                                <?php echo "(" . $categoria['No_estanteria'] . ")" . $categoria['categoria']; ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="" class="form-label" required>Empleado Encargado</label>
+                                    <select id="inputState" name="no_empleado" class="form-select" required>
+                                        <option selected value="">Selecciona una estanteria</option>
+                                        <?php foreach ($empleados as $empleado): ?>
+                                            <option value="<?php echo $empleado['No_documento']; ?>">
+                                                <?php echo "(" . $empleado['primer_nombre'] . " " . $empleado['primer_apellido']; ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Descripción</label>
+                                    <input type="text" class="form-control" name="descripcion" id="categoria"
+                                        aria-describedby="helpId"
+                                        placeholder="¿Por qué se hace el cambio de la información?" size="30" minlength="5"
                                         required />
                                 </div>
                                 <div class="form-group"><button class="btn btn-success">Guardar Registro</button>
@@ -68,21 +105,57 @@ if ($id_libro > 0) {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $nuevolibro = new Libro();
-        $conect = $objdb->conectar();
+        $conexion = $objdb->conectar();
+        $nuevolibro = new Libro();
+        include ("../verificacion.php");
         $nuevolibro->setnombre_Titulo($_POST['nombre_libro']);
         $nuevolibro->setCategoria($_POST['categoria']);
         $nuevolibro->setnombre_Autor($_POST['nombre_autor']);
         $nuevolibro->setNo_estanteria($_POST['no_estanteria']);
-
         $no_estanteria = $nuevolibro->getNo_estanteria();
         $categoria = $nuevolibro->getCategoria();
         $nombre_titulo = $nuevolibro->getnombre_Titulo();
         $nombre_autor = $nuevolibro->getnombre_Autor();
+        try {
+            $campos = array($nombre_autor, $categoria);
+            $errores = array();
+            foreach ($campos as $campo) {
+                if (verifica_valores_especiales($campo) || verifica_valores_numeros($campo)) {
+                    $errores[] = "El campo contiene caracteres no válidos: " . $campo;
+                }
 
-        $sentenciasql = $conect->prepare("UPDATE libro set No_estanteria=?,nombre_autor=?,nombre_libro=?,categoria=? where id_libro=?");
-        $modificar_registro = $sentenciasql->execute([$no_estanteria, $nombre_autor, $nombre_titulo, $categoria, $id_libro]);
-        header("Location: Index.php");
+            }
+
+            if (!empty($errores)) {
+                echo "<div class='alert alert-warning' role='alert'>";
+                echo "Se encontraron errores en los siguientes campos:<br>";
+                foreach ($errores as $error) {
+                    echo "- " . $error . "<br>";
+                }
+                echo "</div>";
+            } else {
+
+                $sentenciasql = $conexion->prepare("UPDATE libro set No_estanteria=?,nombre_autor=?,nombre_libro=?,categoria=? where id_libro=?");
+                $modificar_registro = $sentenciasql->execute([$no_estanteria, $nombre_autor, $nombre_titulo, $categoria, $id_libro]);
+
+                $no_empleado = $_POST['no_empleado'];
+                $tipo = "edicion";
+                $descripcion = $_POST['descripcion'];
+
+                $call_procedure = "call agregar_movimiento('$id_libro','$no_empleado','$tipo','$descripcion')";
+                $sentenciasql = $conexion->prepare($call_procedure);
+                $sentenciasql->execute();
+                header("Location: Index.php");
+
+            }
+        } catch (PDOException $e) {
+
+            echo "<div class='alert alert-warning' role='alert'>";
+            echo "Hubo un error, por favor, vuelva a ingresar los datos: " . $e->getMessage();
+            echo "</div>";
+        }
     }
+
 } else {
     header("Location: Index.php");
 

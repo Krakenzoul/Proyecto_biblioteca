@@ -19,6 +19,18 @@ $prestamo->setFecha_devolucion(
 );
 $fecha = $prestamo->getFecha();
 $fecha_devolucion = $prestamo->getFecha_devolucion();
+
+$sql = "SELECT * FROM empleado";
+$resultado_em = $conexion->prepare($sql);
+$resultado_em->execute();
+$empleados = $resultado_em->fetchAll();
+$resultado_em->closeCursor();
+
+$sql = "SELECT * FROM cliente";
+$resultado_cli = $conexion->prepare($sql);
+$resultado_cli->execute();
+$clientes = $resultado_cli->fetchAll();
+$resultado_cli->closeCursor();
 ?>
 <div>
     <div class="container text-center">
@@ -133,36 +145,29 @@ $fecha_devolucion = $prestamo->getFecha_devolucion();
                     <div class='card-body'>
                         <div class='table-responsive-md'>
                             <form method="POST">
+
                                 <div class="mb-3">
-                                    <label for="" class="form-label">Número De Documento</label>
-                                    <input type="number" class="form-control" name="no_documento" id="no_documento"
-                                        aria-describedby="helpId" placeholder="Número Cedula" required />
+                                    <label for="" class="form-label" required>Número De Documento</label>
+                                    <select id="inputState" name="no_cliente" class="form-select" required>
+                                        <option selected value="">Seleccione el empleado</option>
+                                        <?php foreach ($clientes as $cliente): ?>
+                                            <option value="<?php echo $cliente['No_documento']; ?>">
+                                                <?php echo $cliente['No_documento'] . " " . "(" . $cliente['primer_nombre'] . " " . $cliente['primer_apellido'] . ")"; ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </div>
+
                                 <div class="mb-3">
-                                    <label for="" class="form-label">Primer Nombre</label>
-                                    <input type="text" class="form-control" name="primer_nombre" id="primer_nombre"
-                                        aria-describedby="helpId" placeholder="Nombre Del Autor" required enabled />
-                                </div>
-                                <div class="mb-3">
-                                    <label for="" class="form-label">Segundo Nombre</label>
-                                    <input type="text" class="form-control" name="segundo_nombre" id="segundo_nombre"
-                                        aria-describedby="helpId" placeholder="Titulo Del libro" />
-                                </div>
-                                <div class="mb-3">
-                                    <label for="" class="form-label">Primer Apellido</label>
-                                    <input type="text" class="form-control" name="primer_apellido" id="primer_apellido"
-                                        aria-describedby="helpId" placeholder="Primer Apellido" required />
-                                </div>
-                                <div class="mb-3">
-                                    <label for="" class="form-label">Segundo Apellido</label>
-                                    <input type="text" class="form-control" name="segundo_apellido"
-                                        id="segundo_apellido" aria-describedby="helpId" placeholder="Segundo apellido"
-                                        required />
-                                </div>
-                                <div class="mb-3">
-                                    <label for="" class="form-label">Número Telefónico</label>
-                                    <input type="number" class="form-control" name="telefono" id="telefono"
-                                        aria-describedby="helpId" placeholder="Número De Teléfono" required />
+                                    <label for="" class="form-label" required>Empleado Encargado</label>
+                                    <select id="inputState" name="no_empleado" class="form-select" required>
+                                        <option selected value="">Seleccione el empleado</option>
+                                        <?php foreach ($empleados as $empleado): ?>
+                                            <option value="<?php echo $empleado['No_documento']; ?>">
+                                                <?php echo "(" . $empleado['primer_nombre'] . " " . $empleado['primer_apellido']; ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </div>
                         </div>
                         <div class="form-group">
@@ -181,50 +186,29 @@ $fecha_devolucion = $prestamo->getFecha_devolucion();
 
                     <?php if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         if (isset($_POST["generar_prestamo"])) {
-                            $prestamo->setCedula($_POST["no_documento"]);
-                            $no_documento = $prestamo->getCedula();
-                            $sentenciassql = "call traer_datos_cliente($no_documento)";
-                            $resultados = $conexion->prepare($sentenciassql);
-                            $resultados->execute();
-                            $informacion_persona = $resultados->fetch();
-                            $id_libro = $_SESSION["libro"];
-
-                            if (!$informacion_persona) {
-                                //no hay ningun cliente con esta cedula por lo tanto se registra el cliente
-                    
-                                $prestamo->setPrimer_nombre($_POST["primer_nombre"]);
-                                $prestamo->setSegundo_nombre(
-                                    $_POST["segundo_nombre"]
-                                );
-                                $prestamo->setPrimer_apellido(
-                                    $_POST["primer_apellido"]
-                                );
-                                $prestamo->setSegundo_apellido(
-                                    $_POST["segundo_apellido"]
-                                );
-                                $prestamo->setTelefono($_POST["telefono"]);
-
-                                $telefono = $prestamo->getTelefono();
-                                $primer_n = $prestamo->getPrimer_nombre();
-                                $segundo_n = $prestamo->getSegundo_nombre();
-                                $prime_a = $prestamo->getPrimer_apellido();
-                                $segundo_a = $prestamo->getSegundo_apellido();
-
-                                $sentenciassql = "call agregar_cliente('$no_documento','$primer_n','$segundo_n','$prime_a','$segundo_a','$telefono')";
-                                $resultados = $conexion->prepare($sentenciassql);
-
-                                $resultados->execute();
-
+                            try {
+                                $prestamo->setCedula($_POST["no_cliente"]);
+                                $no_documento = $prestamo->getCedula();
+                                $id_libro = $_SESSION["libro"];
                                 $sentenciassql = "call agregar_prestamo('$id_libro','$no_documento','$fecha','$fecha_devolucion')";
                                 $resultado = $conexion->prepare($sentenciassql);
                                 $resultado->execute();
-                            } else {
-                                //al parecer si hay un cliente, entonces solo se ejecuta agregar
-                                echo "<script>console.log('no hay nadie registrado así que añade el cliente y el prestamo ');</script>";
-                                $sentenciassql = "call agregar_prestamo('$id_libro','$no_documento','$fecha','$fecha_devolucion')";
-                                $resultados = $conexion->prepare($sentenciassql);
-                                $resultados->execute();
+                                $resultado->closeCursor();
+
+                                $no_empleado = $_POST['no_empleado'];
+                                $tipo = "prestamo";
+                                $descripcion = "realización de prestamo";
+
+                                $call_procedure = "call agregar_movimiento('$id_libro','$no_empleado','$tipo','$descripcion')";
+                                $sentenciasql = $conexion->prepare($call_procedure);
+                                $sentenciasql->execute();
+                               
+                            } catch (PDOException $e) {
+                                echo "<div class='alert alert-warning' role='alert'>";
+                                echo "Hubo un error, por favor, vuelva a ingresar los datos: " . $e->getMessage();
+                                echo "</div>";
                             }
+
                         }
                     } ?>
                 </div>

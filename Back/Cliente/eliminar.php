@@ -10,9 +10,15 @@ if (!isset($_GET["No_documento"])) {
     $resultado = $conexion->prepare($consultasql);
     $resultado->execute();
     if ($resultado) {
-        $eliminar = $conexion->prepare("DELETE FROM cliente WHERE No_documento = ?");
-        $registro = $eliminar->execute([$No_documento]);
+        try {
+            $eliminar = $conexion->prepare("DELETE FROM cliente WHERE No_documento = ?");
+            $registro = $eliminar->execute([$No_documento]);
+           
+        } catch (PDOException $e) { 
+            header("Location: index.php?error=1");
+            exit; 
+        }
         header("Location: Index.php");
     }
-    header("Location: Index.php");
+
 }
